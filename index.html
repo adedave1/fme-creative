@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FME CREATIVE — Creative Designer</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- Noise Overlay -->
+  <div class="noise"></div>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="nav" id="nav">
+    <a href="#" class="nav-logo">
+      <span class="logo-text">FME</span>
+      <span class="logo-dot">●</span>
+      <span class="logo-sub">CREATIVE</span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#work" class="nav-link">Work</a></li>
+      <li><a href="#about" class="nav-link">About</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+    </ul>
+
+    <a href="#contact" class="nav-cta">Book a project</a>
+
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#work" class="mobile-link">Work</a></li>
+      <li><a href="#about" class="mobile-link">About</a></li>
+      <li><a href="#contact" class="mobile-link">Contact</a></li>
+      <li><a href="#contact" class="mobile-link mobile-cta">Book a project →</a></li>
+    </ul>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-tag reveal-up">
+      <span class="tag-dot"></span>Available for freelance
+    </div>
+
+    <h1 class="hero-title">
+      <span class="line reveal-up" style="--delay: 0.1s">Crafting visuals</span>
+      <span class="line line-italic reveal-up" style="--delay: 0.2s">that speak</span>
+      <span class="line reveal-up" style="--delay: 0.3s">before words do.</span>
+    </h1>
+
+    <p class="hero-sub reveal-up" style="--delay: 0.4s">
+      Brand identity · Print design · Motion graphics<br />
+      Lagos — Available worldwide
+    </p>
+
+    <div class="hero-actions reveal-up" style="--delay: 0.5s">
+      <a href="#work" class="btn-primary">View work</a>
+      <a href="#about" class="btn-ghost">Who I am</a>
+    </div>
+
+    <div class="hero-scroll reveal-up" style="--delay: 0.6s">
+      <span class="scroll-line"></span>
+      <span class="scroll-text">Scroll</span>
+    </div>
+
+    <!-- Floating accent images -->
+    <div class="hero-float hero-float--1 reveal-up" style="--delay: 0.3s">
+      <div class="float-img" style="background: linear-gradient(135deg, #c9a96e 0%, #a07840 100%);">
+        <span class="float-label">Brand Identity</span>
+      </div>
+    </div>
+    <div class="hero-float hero-float--2 reveal-up" style="--delay: 0.45s">
+      <div class="float-img" style="background: linear-gradient(135deg, #2a2a2a 0%, #444 100%);">
+        <span class="float-label">Print Design</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MARQUEE ===== -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span>Brand Identity</span><span class="sep">✦</span>
+      <span>Logo Design</span><span class="sep">✦</span>
+      <span>Flyer Design</span><span class="sep">✦</span>
+      <span>Motion Graphics</span><span class="sep">✦</span>
+      <span>Packaging</span><span class="sep">✦</span>
+      <span>Social Media</span><span class="sep">✦</span>
+      <span>Brand Identity</span><span class="sep">✦</span>
+      <span>Logo Design</span><span class="sep">✦</span>
+      <span>Flyer Design</span><span class="sep">✦</span>
+      <span>Motion Graphics</span><span class="sep">✦</span>
+      <span>Packaging</span><span class="sep">✦</span>
+      <span>Social Media</span><span class="sep">✦</span>
+    </div>
+  </div>
+
+  <!-- ===== WORK / PORTFOLIO ===== -->
+  <section class="work" id="work">
+    <div class="section-header reveal-up">
+      <span class="section-tag">Selected Work</span>
+      <h2 class="section-title">Recent projects</h2>
+    </div>
+
+    <!-- Category Filter -->
+    <div class="filter-row reveal-up">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="branding">Branding</button>
+      <button class="filter-btn" data-filter="logo">Logo</button>
+      <button class="filter-btn" data-filter="flyer">Flyers</button>
+      <button class="filter-btn" data-filter="social">Social</button>
+    </div>
+
+    <!-- Portfolio Grid — populated dynamically by main.js via Firestore -->
+    <div class="portfolio-grid" id="portfolioGrid"></div>
+
+    <div class="work-footer reveal-up">
+      <a href="#contact" class="btn-outline">Start a project with me →</a>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="about" id="about">
+    <div class="about-grid">
+      <div class="about-left reveal-up">
+        <span class="section-tag">About</span>
+        <h2 class="about-title">
+          Design is not<br />
+          <em>decoration</em> —<br />
+          it's communication.
+        </h2>
+        <p class="about-body">
+          I'm a visual designer based in EKITI STATE with a passion for building brands that feel alive. Whether it's a logo that needs to own a room or a campaign that needs to stop the scroll — I bring craft, strategy, and obsession to every pixel.
+                  <p class="about-body">
+                    Over 5 years of EXPERIENCE in visual design, don't just design — I solve.
+                  </p>
+        <a href="#contact" class="btn-primary" style="margin-top: 2rem; display: inline-block;">Work with me</a>
+      </div>
+
+      <div class="about-right reveal-up" style="--delay: 0.2s">
+        <div class="about-img-wrap">
+          <div class="about-img" style="background: linear-gradient(160deg, #1a1a1a 0%, #3a2a1a 100%); display:flex; align-items:center; justify-content:center; color: #c9a96e; font-family: 'Cormorant Garamond', serif; font-size: 5rem; font-style: italic;">FME</div>
+          <div class="about-accent-card">
+            <span class="accent-num">50+</span>
+            <span class="accent-label">Projects delivered</span>
+          </div>
+        </div>
+
+        <div class="about-stats">
+          <div class="stat">
+            <span class="stat-num">5</span>
+            <span class="stat-label">Years experience</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">30+</span>
+            <span class="stat-label">Happy clients</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">12</span>
+            <span class="stat-label">Industries served</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section class="testimonials" id="testimonials">
+    <div class="section-header reveal-up">
+      <span class="section-tag">Testimonials</span>
+      <h2 class="section-title">What clients say</h2>
+    </div>
+
+    <div class="testi-grid">
+      <div class="testi-card reveal-up" style="--delay: 0s">
+        <p class="testi-quote">"FME completely transformed how our brand looks and feels. The logo alone got us more inquiries than our old website ever did."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background: linear-gradient(135deg, #c9a96e, #a07840);"></div>
+          <div>
+            <span class="testi-name">Amaka Osei</span>
+            <span class="testi-role">Founder, Luxe Cosmetics</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card reveal-up" style="--delay: 0.15s">
+        <p class="testi-quote">"Fast, professional, and genuinely creative. He understood the brief better than I did and delivered something beyond expectations."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background: linear-gradient(135deg, #0f3460, #16213e);"></div>
+          <div>
+            <span class="testi-name">Chidi Eze</span>
+            <span class="testi-role">CEO, Ember Studio</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card reveal-up" style="--delay: 0.3s">
+        <p class="testi-quote">"Our event posters were shared 200+ times on Instagram. People thought we hired a big agency. It was just FME."</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background: linear-gradient(135deg, #006644, #003d2b);"></div>
+          <div>
+            <span class="testi-name">Tolu Bankole</span>
+            <span class="testi-role">Event Director, Neon Nights</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="contact" id="contact">
+    <div class="contact-inner reveal-up">
+      <span class="section-tag">Contact</span>
+      <h2 class="contact-title">
+        Got a project in mind?<br />
+        <em>Let's build something great.</em>
+      </h2>
+
+      <form class="contact-form" id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your name</label>
+            <input type="text" name="name" placeholder="John Doe" required />
+          </div>
+          <div class="form-group">
+            <label>Email address</label>
+            <input type="email" name="email" placeholder="john@example.com" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Project type</label>
+          <select name="project">
+            <option value="">Select a service</option>
+            <option>Brand Identity</option>
+            <option>Logo Design</option>
+            <option>Flyer / Print</option>
+            <option>Social Media Kit</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tell me about your project</label>
+          <textarea name="message" rows="5" placeholder="What do you need? Timeline? Budget?"></textarea>
+        </div>
+        <button type="submit" class="btn-primary btn-submit">Send message →</button>
+      </form>
+
+      <div class="contact-links">
+        <a href="mailto:faitholotin@gmail.com" class="contact-link">Email Us</a>
+        <span class="sep-dot">·</span>
+        <a href="https://wa.me/2349027753378" class="contact-link">WhatsApp</a>
+        <span class="sep-dot">·</span>
+        <a href="https://behance.net" target="_blank" class="contact-link">Behance</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="footer-logo">FME <em>CREATIVE</em></span>
+      <span class="footer-copy">© 2025 · Crafted with intention</span>
+      <div class="footer-links">
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

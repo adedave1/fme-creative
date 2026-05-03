@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FME Creative — Admin</title>
+  <link rel="stylesheet" href="admin.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ===== LOGIN SCREEN ===== -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <div class="login-logo">
+        <span class="logo-text">FME</span>
+        <span class="logo-dot">●</span>
+        <span class="logo-sub">Admin</span>
+      </div>
+      <p class="login-tagline">Your creative command centre</p>
+
+      <form class="login-form" id="loginForm">
+        <div class="field-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com" required />
+        </div>
+        <div class="field-group">
+          <label>Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="loginPassword" placeholder="••••••••••••" required />
+            <button type="button" class="pw-toggle" id="pwToggle">Show</button>
+          </div>
+        </div>
+        <p class="login-error" id="loginError"></p>
+        <button type="submit" class="btn-login" id="loginBtn">
+          <span class="btn-label">Sign in</span>
+          <span class="btn-spinner" id="loginSpinner"></span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== DASHBOARD ===== -->
+  <div class="dashboard" id="dashboard" style="display:none">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <span>FME <em>Creative</em></span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-panel="projects">
+          <span class="nav-icon">⬡</span> Projects
+        </button>
+        <button class="nav-item" data-panel="upload">
+          <span class="nav-icon">↑</span> Upload
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span class="admin-email" id="adminEmail"></span>
+        <button class="btn-logout" id="logoutBtn">Sign out</button>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+
+      <!-- ── PROJECTS PANEL ── -->
+      <section class="panel active" id="panel-projects">
+        <div class="panel-header">
+          <div>
+            <h1 class="panel-title">Projects</h1>
+            <p class="panel-sub" id="projectCount">Loading…</p>
+          </div>
+          <button class="btn-new" id="btnNewProject">+ New project</button>
+        </div>
+
+        <div class="project-table-wrap">
+          <div class="project-table-head">
+            <span>Image</span>
+            <span>Title</span>
+            <span>Category</span>
+            <span>Status</span>
+            <span>Actions</span>
+          </div>
+          <div class="project-list" id="projectList">
+            <!-- Rows injected by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ── UPLOAD PANEL ── -->
+      <section class="panel" id="panel-upload">
+        <div class="panel-header">
+          <div>
+            <h1 class="panel-title" id="uploadPanelTitle">New Project</h1>
+            <p class="panel-sub">Fill in the details and upload an image</p>
+          </div>
+        </div>
+
+        <form class="upload-form" id="uploadForm">
+          <input type="hidden" id="editId" value="" />
+
+          <!-- Drop zone -->
+          <div class="drop-zone" id="dropZone">
+            <div class="drop-inner" id="dropInner">
+              <span class="drop-icon">↑</span>
+              <p class="drop-label">Drag & drop image here</p>
+              <p class="drop-sub">or click to browse · JPG, PNG, WEBP · max 10MB</p>
+              <input type="file" id="fileInput" accept="image/*" hidden />
+            </div>
+            <div class="drop-preview" id="dropPreview" style="display:none">
+              <img id="previewImg" src="" alt="Preview" />
+              <button type="button" class="preview-remove" id="removeImg">✕</button>
+            </div>
+          </div>
+
+          <!-- Progress bar -->
+          <div class="upload-progress" id="uploadProgress" style="display:none">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <span class="progress-label" id="progressLabel">0%</span>
+          </div>
+
+          <!-- Fields -->
+          <div class="form-grid">
+            <div class="field-group">
+              <label>Project title *</label>
+              <input type="text" id="fieldTitle" placeholder="e.g. Luxe Cosmetics Brand" required />
+            </div>
+            <div class="field-group">
+              <label>Category *</label>
+              <select id="fieldCategory" required>
+                <option value="">Select category</option>
+                <option value="branding">Brand Identity</option>
+                <option value="logo">Logo Design</option>
+                <option value="flyer">Flyer Design</option>
+                <option value="social">Social Media Kit</option>
+                <option value="motion">Motion Graphics</option>
+                <option value="print">Print Design</option>
+              </select>
+            </div>
+            <div class="field-group field-group--full">
+              <label>Description</label>
+              <textarea id="fieldDescription" rows="4" placeholder="What was this project about? What did you solve?"></textarea>
+            </div>
+            <div class="field-group">
+              <label>Tags <span class="label-hint">(comma separated)</span></label>
+              <input type="text" id="fieldTags" placeholder="branding, identity, packaging" />
+            </div>
+            <div class="field-group">
+              <label>Status</label>
+              <select id="fieldPublished">
+                <option value="true">Published — visible on site</option>
+                <option value="false">Draft — hidden from site</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-cancel" id="btnCancel">Cancel</button>
+            <button type="submit" class="btn-save" id="saveBtn">
+              <span id="saveBtnLabel">Save project</span>
+            </button>
+          </div>
+
+          <p class="form-error" id="formError"></p>
+        </form>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Delete confirm modal -->
+  <div class="modal-overlay" id="deleteModal" style="display:none">
+    <div class="modal">
+      <h3 class="modal-title">Delete project?</h3>
+      <p class="modal-body">This will permanently remove the project from your site. This can't be undone.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="cancelDelete">Keep it</button>
+        <button class="btn-delete-confirm" id="confirmDelete">Yes, delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
