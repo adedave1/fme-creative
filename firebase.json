@@ -8,22 +8,7 @@
       "node_modules/**",
       ".git/**"
     ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/404.html"
-      }
-    ],
-    "headers": [
-      {
-        "source": "**/*.@(js|css)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "max-age=31536000"
-          }
-        ]
-      }
-    ]
+    "cleanUrls": false,
+    "trailingSlash": false
   }
 }
