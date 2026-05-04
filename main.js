@@ -1,9 +1,29 @@
 // ============================================
 //  main.js — Connected to Firebase/Firestore
-//  Projects are fetched + rendered dynamically
 // ============================================
 
 import { getProjects } from "./firebase.js";
+
+// ─── LOADER ───────────────────────────────────
+const loader    = document.getElementById("loader");
+const loaderBar = document.getElementById("loaderBar");
+const loaderPct = document.getElementById("loaderPct");
+
+function runLoader(onDone) {
+  let pct = 0;
+  const tick = setInterval(() => {
+    pct += Math.random() * 18;
+    if (pct >= 100) { pct = 100; clearInterval(tick); }
+    loaderBar.style.width = pct + "%";
+    loaderPct.textContent = Math.floor(pct) + "%";
+    if (pct === 100) setTimeout(onDone, 320);
+  }, 80);
+}
+
+function hideLoader() {
+  loader.classList.add("loader--done");
+  setTimeout(() => loader.remove(), 700);
+}
 
 // ─── CURSOR ───────────────────────────────────
 const cursor   = document.getElementById("cursor");
@@ -28,6 +48,12 @@ document.addEventListener("mousemove", e => {
 const nav = document.getElementById("nav");
 window.addEventListener("scroll", () => {
   nav.classList.toggle("scrolled", window.scrollY > 40);
+}, { passive: true });
+
+// ─── WHATSAPP FLOAT SHOW ON SCROLL ────────────
+const waFloat = document.getElementById("waFloat");
+window.addEventListener("scroll", () => {
+  waFloat.classList.toggle("wa-float--visible", window.scrollY > 400);
 }, { passive: true });
 
 // ─── MOBILE MENU ──────────────────────────────
@@ -60,11 +86,17 @@ const revealObserver = new IntersectionObserver(entries => {
 
 document.querySelectorAll(".reveal-up").forEach(el => revealObserver.observe(el));
 
-// ─── PORTFOLIO (DYNAMIC) ─────────────────────
-const grid       = document.getElementById("portfolioGrid");
-const filterBtns = document.querySelectorAll(".filter-btn");
+// ─── LIGHTBOX ─────────────────────────────────
+const lightbox         = document.getElementById("lightbox");
+const lightboxBackdrop = document.getElementById("lightboxBackdrop");
+const lightboxClose    = document.getElementById("lightboxClose");
+const lightboxImg      = document.getElementById("lightboxImg");
+const lightboxFallback = document.getElementById("lightboxFallback");
+const lightboxCat      = document.getElementById("lightboxCat");
+const lightboxTitle    = document.getElementById("lightboxTitle");
+const lightboxDesc     = document.getElementById("lightboxDesc");
+const lightboxTags     = document.getElementById("lightboxTags");
 
-// Human-readable category labels
 const CATEGORY_LABELS = {
   branding: "Brand Identity",
   logo:     "Logo Design",
@@ -74,40 +106,71 @@ const CATEGORY_LABELS = {
   print:    "Print Design",
 };
 
-// Gradient fallback per category (shown while image loads or if no image)
 const FALLBACKS = {
-  branding: "linear-gradient(160deg,#1a0a2e,#3d1a5e,#7b3fa0)",
-  logo:     "linear-gradient(160deg,#2d1b00,#6b3a00,#c8780a)",
-  flyer:    "linear-gradient(160deg,#0d0d0d,#1a1a1a,#2e2e2e)",
-  social:   "linear-gradient(160deg,#003d2b,#006644,#00a86b)",
-  motion:   "linear-gradient(160deg,#001a3d,#003080,#0057cc)",
-  print:    "linear-gradient(160deg,#1a1a2e,#16213e,#0f3460)",
+  branding: "linear-gradient(160deg,#0d1a3a,#1a3a6e,#2d5fa0)",
+  logo:     "linear-gradient(160deg,#0d1425,#1a2f55,#254d8a)",
+  flyer:    "linear-gradient(160deg,#080d18,#111b30,#1e3060)",
+  social:   "linear-gradient(160deg,#062040,#0d3a70,#1a5ca8)",
+  motion:   "linear-gradient(160deg,#050d25,#0d1f4a,#1a3a8a)",
+  print:    "linear-gradient(160deg,#080f20,#121e40,#1e3070)",
 };
 
-let allProjects = [];
+function openLightbox(project) {
+  const { title, category, description, tags, imageURL } = project;
+  const label = CATEGORY_LABELS[category] || category;
 
-// Build one card DOM element from a Firestore project
+  lightboxCat.textContent   = label;
+  lightboxTitle.textContent = title;
+  lightboxDesc.textContent  = description || "A beautifully crafted project by FME Creative.";
+
+  lightboxTags.innerHTML = (tags || [])
+    .map(t => `<span class="lightbox-tag">${t}</span>`)
+    .join("");
+
+  if (imageURL) {
+    lightboxImg.src                = imageURL;
+    lightboxImg.alt                = title;
+    lightboxImg.style.display      = "block";
+    lightboxFallback.style.display = "none";
+  } else {
+    lightboxImg.style.display      = "none";
+    lightboxFallback.style.background = FALLBACKS[category] || FALLBACKS.branding;
+    lightboxFallback.style.display = "flex";
+  }
+
+  lightbox.classList.add("lightbox--open");
+  lightboxBackdrop.classList.add("lightbox-backdrop--open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeLightbox() {
+  lightbox.classList.remove("lightbox--open");
+  lightboxBackdrop.classList.remove("lightbox-backdrop--open");
+  document.body.style.overflow = "";
+}
+
+lightboxClose.addEventListener("click", closeLightbox);
+lightboxBackdrop.addEventListener("click", closeLightbox);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
+
+// ─── PORTFOLIO (DYNAMIC) ─────────────────────
+const grid       = document.getElementById("portfolioGrid");
+const filterBtns = document.querySelectorAll(".filter-btn");
+let allProjects  = [];
+
 function buildCard(project, index) {
-  const { id, title, category, imageURL } = project;
-  const label  = CATEGORY_LABELS[category] || category;
-  const num    = String(index + 1).padStart(2, "0");
-
-  // Layout variation: every 5-card cycle has a tall + wide card
+  const { title, category, imageURL } = project;
+  const label = CATEGORY_LABELS[category] || category;
+  const num   = String(index + 1).padStart(2, "0");
   const isTall = index % 5 === 1;
   const isWide = index % 5 === 3;
 
   const article = document.createElement("article");
-  article.className = [
-    "project-card",
-    isTall ? "project-card--tall" : "",
-    isWide ? "project-card--wide" : "",
-  ].filter(Boolean).join(" ");
-
+  article.className = ["project-card", isTall ? "project-card--tall" : "", isWide ? "project-card--wide" : ""]
+    .filter(Boolean).join(" ");
   article.dataset.category = category;
-  article.dataset.id       = id;
   article.style.transition = "opacity 0.3s ease, transform 0.3s ease";
 
-  // Use real image if available, fallback gradient otherwise
   const bgStyle = imageURL
     ? `background-image: url('${imageURL}'); background-size: cover; background-position: center;`
     : `background: ${FALLBACKS[category] || FALLBACKS.branding};`;
@@ -115,9 +178,7 @@ function buildCard(project, index) {
   article.innerHTML = `
     <div class="card-img-wrap">
       <div class="card-img" style="${bgStyle}"></div>
-      <div class="card-overlay">
-        <span class="card-view">View Project →</span>
-      </div>
+      <div class="card-overlay"><span class="card-view">View Project →</span></div>
       <span class="card-num">${num}</span>
     </div>
     <div class="card-info">
@@ -126,41 +187,27 @@ function buildCard(project, index) {
     </div>
   `;
 
-  // Click → project detail page
-  article.addEventListener("click", () => {
-    window.location.href = `project.html?id=${id}`;
-  });
-
+  article.addEventListener("click", () => openLightbox(project));
   return article;
 }
 
-// Render cards into grid, filtered by category
 function renderCards(filter = "all") {
-  const filtered = filter === "all"
-    ? allProjects
-    : allProjects.filter(p => p.category === filter);
-
-  // Fade the grid out
+  const filtered = filter === "all" ? allProjects : allProjects.filter(p => p.category === filter);
   grid.style.transition = "opacity 0.25s ease, transform 0.25s ease";
   grid.style.opacity    = "0";
   grid.style.transform  = "translateY(8px)";
-
   setTimeout(() => {
     grid.innerHTML = "";
-
     if (filtered.length === 0) {
       grid.innerHTML = `<p class="grid-empty">No projects in this category yet.</p>`;
     } else {
       filtered.forEach((p, i) => grid.appendChild(buildCard(p, i)));
     }
-
-    // Fade back in
     grid.style.opacity   = "1";
     grid.style.transform = "translateY(0)";
   }, 250);
 }
 
-// Show skeleton placeholders while loading
 function showSkeletons(count = 6) {
   grid.innerHTML = "";
   for (let i = 0; i < count; i++) {
@@ -171,11 +218,9 @@ function showSkeletons(count = 6) {
   }
 }
 
-// Fetch from Firestore and render
 async function loadProjects() {
   showSkeletons();
   try {
-    // Only show published projects on the public site
     const all = await getProjects();
     allProjects = all.filter(p => p.published === true || p.published === "true");
     renderCards("all");
@@ -185,12 +230,10 @@ async function loadProjects() {
       <div class="grid-error">
         <p>Couldn't load projects right now.</p>
         <p style="font-size:0.75rem;opacity:0.5;margin-top:0.5rem">${err.message}</p>
-      </div>
-    `;
+      </div>`;
   }
 }
 
-// Filter button clicks
 filterBtns.forEach(btn => {
   btn.addEventListener("click", () => {
     filterBtns.forEach(b => b.classList.remove("active"));
@@ -201,27 +244,63 @@ filterBtns.forEach(btn => {
 
 // ─── CONTACT FORM ─────────────────────────────
 const form = document.getElementById("contactForm");
+let formDirty = false;
+
+// EmailJS contact form
+const EMAILJS_PUBLIC_KEY  = "vv4pcESmEM148dmuh";
+const EMAILJS_SERVICE_ID  = "service_xxc5g5c";
+const EMAILJS_TEMPLATE_ID = "template_6s0pmb9";
+
 if (form) {
-  form.addEventListener("submit", e => {
+  const ejsScript = document.createElement("script");
+  ejsScript.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";
+  ejsScript.onload = () => emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+  document.head.appendChild(ejsScript);
+
+  form.addEventListener("input", () => { formDirty = true; });
+
+  form.addEventListener("submit", async e => {
     e.preventDefault();
     const btn = form.querySelector(".btn-submit");
     btn.textContent   = "Sending…";
+    btn.disabled      = true;
     btn.style.opacity = "0.7";
-    // TODO: wire up EmailJS or a backend function here
-    setTimeout(() => {
+
+    const templateParams = {
+      from_name:    form.querySelector("[name=name]").value,
+      from_email:   form.querySelector("[name=email]").value,
+      project_type: form.querySelector("[name=project]").value || "Not specified",
+      message:      form.querySelector("[name=message]").value,
+    };
+
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
       btn.textContent      = "Message sent ✓";
       btn.style.background = "#3ecf8e";
       btn.style.opacity    = "1";
+      btn.disabled         = false;
       form.reset();
-      setTimeout(() => {
-        btn.textContent      = "Send message →";
-        btn.style.background = "";
-      }, 3000);
-    }, 1200);
+      formDirty = false;
+      setTimeout(() => { btn.textContent = "Send message →"; btn.style.background = ""; }, 3500);
+    } catch (err) {
+      console.error("EmailJS error:", err);
+      btn.textContent      = "Failed — try again";
+      btn.style.background = "#e05555";
+      btn.style.opacity    = "1";
+      btn.disabled         = false;
+      setTimeout(() => { btn.textContent = "Send message →"; btn.style.background = ""; }, 3500);
+    }
   });
 }
 
+// ─── UNSAVED FORM WARNING ─────────────────────
+window.addEventListener("beforeunload", e => {
+  if (formDirty) { e.preventDefault(); e.returnValue = ""; }
+});
+
 // ─── INIT ─────────────────────────────────────
-// Remove all hardcoded HTML cards — grid is now 100% data-driven
 grid.innerHTML = "";
-loadProjects();
+runLoader(async () => {
+  hideLoader();
+  await loadProjects();
+});

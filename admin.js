@@ -1,5 +1,5 @@
 // ============================================
-//  admin.js — Dashboard logic
+//  admin.js — Dashboard with full edit/delete
 // ============================================
 
 import {
@@ -8,53 +8,56 @@ import {
 } from "./firebase.js";
 
 // ─── ELEMENTS ────────────────────────────────
-const loginScreen  = document.getElementById("loginScreen");
-const dashboard    = document.getElementById("dashboard");
-const loginForm    = document.getElementById("loginForm");
-const loginEmail   = document.getElementById("loginEmail");
-const loginPassword = document.getElementById("loginPassword");
-const loginError   = document.getElementById("loginError");
-const loginBtn     = document.getElementById("loginBtn");
-const loginSpinner = document.getElementById("loginSpinner");
-const pwToggle     = document.getElementById("pwToggle");
-const adminEmail   = document.getElementById("adminEmail");
-const logoutBtn    = document.getElementById("logoutBtn");
+const loginScreen    = document.getElementById("loginScreen");
+const dashboard      = document.getElementById("dashboard");
+const loginForm      = document.getElementById("loginForm");
+const loginEmail     = document.getElementById("loginEmail");
+const loginPassword  = document.getElementById("loginPassword");
+const loginError     = document.getElementById("loginError");
+const loginBtn       = document.getElementById("loginBtn");
+const loginSpinner   = document.getElementById("loginSpinner");
+const pwToggle       = document.getElementById("pwToggle");
+const adminEmailEl   = document.getElementById("adminEmail");
+const logoutBtn = document.getElementById("logoutBtn");
+const logoutBtnMobile = document.getElementById("logoutBtnMobile");
 
-const projectList  = document.getElementById("projectList");
-const projectCount = document.getElementById("projectCount");
-const btnNewProject = document.getElementById("btnNewProject");
+const projectList    = document.getElementById("projectList");
+const projectCount   = document.getElementById("projectCount");
+const btnNewProject  = document.getElementById("btnNewProject");
+const navBadge       = document.getElementById("navBadge");
 
-const uploadForm   = document.getElementById("uploadForm");
-const uploadPanelTitle = document.getElementById("uploadPanelTitle");
-const editId       = document.getElementById("editId");
-const dropZone     = document.getElementById("dropZone");
-const dropInner    = document.getElementById("dropInner");
-const dropPreview  = document.getElementById("dropPreview");
-const previewImg   = document.getElementById("previewImg");
-const removeImg    = document.getElementById("removeImg");
-const fileInput    = document.getElementById("fileInput");
-const uploadProgress = document.getElementById("uploadProgress");
-const progressFill = document.getElementById("progressFill");
-const progressLabel = document.getElementById("progressLabel");
-const fieldTitle   = document.getElementById("fieldTitle");
-const fieldCategory = document.getElementById("fieldCategory");
-const fieldDescription = document.getElementById("fieldDescription");
-const fieldTags    = document.getElementById("fieldTags");
-const fieldPublished = document.getElementById("fieldPublished");
-const saveBtn      = document.getElementById("saveBtn");
-const saveBtnLabel = document.getElementById("saveBtnLabel");
-const btnCancel    = document.getElementById("btnCancel");
-const formError    = document.getElementById("formError");
+const uploadForm        = document.getElementById("uploadForm");
+const uploadPanelTitle  = document.getElementById("uploadPanelTitle");
+const editId            = document.getElementById("editId");
+const dropZone          = document.getElementById("dropZone");
+const dropInner         = document.getElementById("dropInner");
+const dropPreview       = document.getElementById("dropPreview");
+const previewImg        = document.getElementById("previewImg");
+const removeImg         = document.getElementById("removeImg");
+const fileInput         = document.getElementById("fileInput");
+const uploadProgress    = document.getElementById("uploadProgress");
+const progressFill      = document.getElementById("progressFill");
+const progressLabel     = document.getElementById("progressLabel");
+const fieldTitle        = document.getElementById("fieldTitle");
+const fieldCategory     = document.getElementById("fieldCategory");
+const fieldDescription  = document.getElementById("fieldDescription");
+const fieldTags         = document.getElementById("fieldTags");
+const fieldPublished    = document.getElementById("fieldPublished");
+const saveBtn           = document.getElementById("saveBtn");
+const saveBtnLabel      = document.getElementById("saveBtnLabel");
+const btnCancel         = document.getElementById("btnCancel");
+const formError         = document.getElementById("formError");
 
-const deleteModal  = document.getElementById("deleteModal");
-const cancelDelete = document.getElementById("cancelDelete");
-const confirmDelete = document.getElementById("confirmDelete");
-const toast        = document.getElementById("toast");
+const deleteModal    = document.getElementById("deleteModal");
+const cancelDelete   = document.getElementById("cancelDelete");
+const confirmDelete  = document.getElementById("confirmDelete");
+const toast          = document.getElementById("toast");
 
-let selectedFile   = null;
+// ─── STATE ────────────────────────────────────
+let selectedFile     = null;
 let existingImageURL = null;
 let pendingDeleteId  = null;
-let allProjects    = [];
+let allProjects      = [];
 
 // ─── TOAST ───────────────────────────────────
 function showToast(msg, type = "success") {
@@ -63,16 +66,16 @@ function showToast(msg, type = "success") {
   setTimeout(() => { toast.className = "toast"; }, 3200);
 }
 
-// ─── AUTH ────────────────────────────────────
+// ─── AUTH ─────────────────────────────────────
 onAuthChange(user => {
   if (user) {
-    loginScreen.style.display  = "none";
-    dashboard.style.display    = "flex";
-    adminEmail.textContent     = user.email;
+    loginScreen.style.display = "none";
+    dashboard.style.display   = "flex";
+    adminEmailEl.textContent  = user.email;
     loadProjects();
   } else {
-    loginScreen.style.display  = "flex";
-    dashboard.style.display    = "none";
+    loginScreen.style.display = "flex";
+    dashboard.style.display   = "none";
   }
 });
 
@@ -90,14 +93,13 @@ loginForm.addEventListener("submit", async e => {
   }
 });
 
-logoutBtn.addEventListener("click", async () => {
-  await logout();
-});
+logoutBtn.addEventListener("click", () => logout());
+logoutBtnMobile && logoutBtnMobile.addEventListener("click", () => logout());
 
 pwToggle.addEventListener("click", () => {
-  const isText = loginPassword.type === "text";
-  loginPassword.type  = isText ? "password" : "text";
-  pwToggle.textContent = isText ? "Show" : "Hide";
+  const show = loginPassword.type === "password";
+  loginPassword.type   = show ? "text" : "password";
+  pwToggle.textContent = show ? "Hide" : "Show";
 });
 
 function friendlyAuthError(code) {
@@ -112,32 +114,26 @@ function friendlyAuthError(code) {
 }
 
 // ─── PANEL NAVIGATION ────────────────────────
-document.querySelectorAll(".nav-item").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    const target = btn.dataset.panel;
-    document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
-    document.getElementById(`panel-${target}`).classList.add("active");
-  });
-});
-
 function goToPanel(name) {
-  document.querySelectorAll(".nav-item").forEach(b => {
-    b.classList.toggle("active", b.dataset.panel === name);
-  });
+  document.querySelectorAll(".nav-item").forEach(b =>
+    b.classList.toggle("active", b.dataset.panel === name)
+  );
   document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
   document.getElementById(`panel-${name}`).classList.add("active");
 }
 
-// ─── LOAD PROJECTS ────────────────────────────
+document.querySelectorAll(".nav-item").forEach(btn => {
+  btn.addEventListener("click", () => goToPanel(btn.dataset.panel));
+});
+
+// ─── LOAD & RENDER PROJECTS ──────────────────
 async function loadProjects() {
-  projectList.innerHTML = `<div class="table-empty">Loading projects…</div>`;
+  projectList.innerHTML = `<div class="table-empty">Loading…</div>`;
   try {
     allProjects = await getProjects();
     renderTable();
   } catch (err) {
-    projectList.innerHTML = `<div class="table-empty">Failed to load: ${err.message}</div>`;
+    projectList.innerHTML = `<div class="table-empty">Error: ${err.message}</div>`;
   }
 }
 
@@ -147,35 +143,68 @@ function renderTable() {
     ? "No projects yet"
     : `${count} project${count !== 1 ? "s" : ""}`;
 
+  // Update sidebar badge
+  if (navBadge) {
+    if (count > 0) {
+      navBadge.textContent   = count;
+      navBadge.style.display = "inline-block";
+    } else {
+      navBadge.style.display = "none";
+    }
+  }
+
   if (count === 0) {
     projectList.innerHTML = `<div class="table-empty">No projects yet — upload your first one!</div>`;
     return;
   }
 
   projectList.innerHTML = "";
+
   allProjects.forEach(p => {
-    const row = document.createElement("div");
-    row.className = "project-row";
     const isLive = p.published === true || p.published === "true";
+    const row    = document.createElement("div");
+    row.className    = "project-row";
+    row.dataset.id   = p.id;
+
     row.innerHTML = `
       ${p.imageURL
         ? `<img class="row-thumb" src="${p.imageURL}" alt="${p.title}" loading="lazy" />`
         : `<div class="row-thumb-placeholder"></div>`}
       <span class="row-title">${p.title}</span>
       <span class="row-cat">${p.category || "—"}</span>
-      <span class="row-status">
+      <button class="row-status toggle-status" data-id="${p.id}" data-live="${isLive}" title="Click to toggle">
         <span class="status-dot ${isLive ? "live" : "draft"}"></span>
         ${isLive ? "Live" : "Draft"}
-      </span>
+      </button>
       <div class="row-actions">
         <button class="btn-edit" data-id="${p.id}">Edit</button>
-        <button class="btn-del"  data-id="${p.id}">Del</button>
+        <button class="btn-del"  data-id="${p.id}">Delete</button>
       </div>
     `;
+
+    // Edit
     row.querySelector(".btn-edit").addEventListener("click", () => openEdit(p));
-    row.querySelector(".btn-del").addEventListener("click",  () => openDeleteModal(p.id));
+
+    // Delete
+    row.querySelector(".btn-del").addEventListener("click", () => openDeleteModal(p.id));
+
+    // Toggle live/draft directly from table
+    row.querySelector(".toggle-status").addEventListener("click", () => togglePublished(p));
+
     projectList.appendChild(row);
   });
+}
+
+// ─── TOGGLE PUBLISHED STATUS ─────────────────
+async function togglePublished(project) {
+  const newStatus = !(project.published === true || project.published === "true");
+  try {
+    await updateProject(project.id, { published: newStatus });
+    showToast(newStatus ? "Project is now Live ✓" : "Project set to Draft");
+    await loadProjects(); // refresh table
+  } catch (err) {
+    showToast("Failed to update: " + err.message, "error");
+  }
 }
 
 // ─── NEW PROJECT ─────────────────────────────
@@ -185,23 +214,27 @@ btnNewProject.addEventListener("click", () => {
   goToPanel("upload");
 });
 
-// ─── EDIT PROJECT ────────────────────────────
+// ─── OPEN EDIT ───────────────────────────────
 function openEdit(project) {
   resetForm();
   uploadPanelTitle.textContent = "Edit Project";
-  editId.value               = project.id;
-  fieldTitle.value           = project.title || "";
-  fieldCategory.value        = project.category || "";
-  fieldDescription.value     = project.description || "";
-  fieldTags.value            = (project.tags || []).join(", ");
-  fieldPublished.value       = String(project.published ?? "true");
 
+  // Pre-fill all fields
+  editId.value              = project.id;
+  fieldTitle.value          = project.title        || "";
+  fieldCategory.value       = project.category     || "";
+  fieldDescription.value    = project.description  || "";
+  fieldTags.value           = (project.tags || []).join(", ");
+  fieldPublished.value      = String(project.published ?? "true");
+
+  // Show existing image in preview
   if (project.imageURL) {
-    existingImageURL    = project.imageURL;
-    previewImg.src      = project.imageURL;
+    existingImageURL          = project.imageURL;
+    previewImg.src            = project.imageURL;
     dropInner.style.display   = "none";
     dropPreview.style.display = "block";
   }
+
   goToPanel("upload");
 }
 
@@ -240,17 +273,15 @@ removeImg.addEventListener("click", () => {
 
 function setFile(file) {
   if (!file.type.startsWith("image/")) {
-    showToast("Please select an image file.", "error");
-    return;
+    showToast("Please select an image file.", "error"); return;
   }
   if (file.size > 10 * 1024 * 1024) {
-    showToast("Image must be under 10 MB.", "error");
-    return;
+    showToast("Image must be under 10 MB.", "error"); return;
   }
   selectedFile = file;
   const reader = new FileReader();
   reader.onload = e => {
-    previewImg.src = e.target.result;
+    previewImg.src            = e.target.result;
     dropInner.style.display   = "none";
     dropPreview.style.display = "block";
   };
@@ -263,30 +294,28 @@ uploadForm.addEventListener("submit", async e => {
   formError.textContent = "";
 
   if (!fieldTitle.value.trim()) {
-    formError.textContent = "Please enter a project title.";
-    return;
+    formError.textContent = "Please enter a project title."; return;
   }
   if (!fieldCategory.value) {
-    formError.textContent = "Please select a category.";
-    return;
+    formError.textContent = "Please select a category."; return;
   }
 
-  saveBtn.disabled    = true;
+  saveBtn.disabled         = true;
   saveBtnLabel.textContent = "Saving…";
 
   try {
-    let imageURL      = existingImageURL || "";
-    let cloudinaryId  = "";
+    let imageURL     = existingImageURL || "";
+    let cloudinaryId = "";
 
-    // Upload new image if selected
+    // Upload new image if one was selected
     if (selectedFile) {
       uploadProgress.style.display = "flex";
       const result = await uploadImage(selectedFile, pct => {
-        progressFill.style.width    = pct + "%";
-        progressLabel.textContent   = pct + "%";
+        progressFill.style.width  = pct + "%";
+        progressLabel.textContent = pct + "%";
       });
-      imageURL     = result.url;
-      cloudinaryId = result.cloudinaryId;
+      imageURL              = result.url;
+      cloudinaryId          = result.cloudinaryId;
       uploadProgress.style.display = "none";
     }
 
@@ -302,16 +331,16 @@ uploadForm.addEventListener("submit", async e => {
       tags,
       published:   fieldPublished.value === "true",
       imageURL,
-      cloudinaryId,
+      ...(cloudinaryId && { cloudinaryId }),
     };
 
     const id = editId.value;
     if (id) {
       await updateProject(id, data);
-      showToast("Project updated!");
+      showToast("Project updated ✓");
     } else {
       await addProject(data);
-      showToast("Project published!");
+      showToast("Project published ✓");
     }
 
     resetForm();
@@ -329,13 +358,13 @@ uploadForm.addEventListener("submit", async e => {
 
 // ─── DELETE ──────────────────────────────────
 function openDeleteModal(id) {
-  pendingDeleteId = id;
+  pendingDeleteId           = id;
   deleteModal.style.display = "flex";
 }
 
 cancelDelete.addEventListener("click", () => {
   deleteModal.style.display = "none";
-  pendingDeleteId = null;
+  pendingDeleteId           = null;
 });
 
 confirmDelete.addEventListener("click", async () => {
@@ -351,21 +380,28 @@ confirmDelete.addEventListener("click", async () => {
   }
 });
 
+// ─── UNSAVED CHANGES WARNING ─────────────────
+let adminFormDirty = false;
+uploadForm.addEventListener("input", () => { adminFormDirty = true; });
+
+window.addEventListener("beforeunload", e => {
+  if (adminFormDirty) { e.preventDefault(); e.returnValue = ""; }
+});
+
 // ─── RESET FORM ──────────────────────────────
 function resetForm() {
   uploadForm.reset();
-  editId.value       = "";
-  selectedFile       = null;
-  existingImageURL   = null;
-  previewImg.src     = "";
-  dropPreview.style.display   = "none";
-  dropInner.style.display     = "flex";
+  editId.value                 = "";
+  selectedFile                 = null;
+  existingImageURL             = null;
+  previewImg.src               = "";
+  dropPreview.style.display    = "none";
+  dropInner.style.display      = "flex";
   uploadProgress.style.display = "none";
-  progressFill.style.width    = "0%";
-  progressLabel.textContent   = "0%";
-  formError.textContent       = "";
-  saveBtnLabel.textContent    = "Save project";
-  saveBtn.disabled            = false;
+  progressFill.style.width     = "0%";
+  progressLabel.textContent    = "0%";
+  formError.textContent        = "";
+  saveBtnLabel.textContent     = "Save project";
+  saveBtn.disabled             = false;
+  adminFormDirty               = false;
 }
-
-

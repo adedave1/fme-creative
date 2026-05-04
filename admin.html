@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FME Creative — Admin</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="admin.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -11,7 +12,7 @@
 </head>
 <body>
 
-  <!-- ===== LOGIN SCREEN ===== -->
+  <!-- LOGIN SCREEN -->
   <div class="login-screen" id="loginScreen">
     <div class="login-card">
       <div class="login-logo">
@@ -20,7 +21,6 @@
         <span class="logo-sub">Admin</span>
       </div>
       <p class="login-tagline">Your creative command centre</p>
-
       <form class="login-form" id="loginForm">
         <div class="field-group">
           <label>Email</label>
@@ -42,145 +42,146 @@
     </div>
   </div>
 
-  <!-- ===== DASHBOARD ===== -->
+  <!-- DASHBOARD -->
   <div class="dashboard" id="dashboard" style="display:none">
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-logo">
-        <span>FME <em>Creative</em></span>
+    <!-- Mobile top bar (shown on small screens, hidden on desktop) -->
+    <div class="mobile-topbar">
+      <span class="mobile-topbar-logo">FME <em>Creative</em></span>
+      <div class="mobile-topbar-right">
+        <button class="nav-item" data-panel="projects">Projects</button>
+        <button class="nav-item" data-panel="upload">Upload</button>
+        <button class="btn-mobile-logout" id="logoutBtnMobile">Sign out</button>
       </div>
+    </div>
 
-      <nav class="sidebar-nav">
-        <button class="nav-item active" data-panel="projects">
-          <span class="nav-icon">⬡</span> Projects
-        </button>
-        <button class="nav-item" data-panel="upload">
-          <span class="nav-icon">↑</span> Upload
-        </button>
-      </nav>
+    <!-- Sidebar + Main in a row -->
+    <div class="dashboard-body">
 
-      <div class="sidebar-footer">
-        <span class="admin-email" id="adminEmail"></span>
-        <button class="btn-logout" id="logoutBtn">Sign out</button>
-      </div>
-    </aside>
-
-    <!-- Main content -->
-    <main class="main">
-
-      <!-- ── PROJECTS PANEL ── -->
-      <section class="panel active" id="panel-projects">
-        <div class="panel-header">
-          <div>
-            <h1 class="panel-title">Projects</h1>
-            <p class="panel-sub" id="projectCount">Loading…</p>
-          </div>
-          <button class="btn-new" id="btnNewProject">+ New project</button>
+      <aside class="sidebar">
+        <div class="sidebar-logo"><span>FME <em>Creative</em></span></div>
+        <nav class="sidebar-nav">
+          <button class="nav-item active" data-panel="projects">
+            <span class="nav-icon">⬡</span> Projects
+            <span class="nav-badge" id="navBadge" style="display:none"></span>
+          </button>
+          <button class="nav-item" data-panel="upload">
+            <span class="nav-icon">↑</span> Upload
+          </button>
+        </nav>
+        <div class="sidebar-footer">
+          <span class="admin-email" id="adminEmail"></span>
+          <button class="btn-logout" id="logoutBtn">Sign out</button>
         </div>
+      </aside>
 
-        <div class="project-table-wrap">
-          <div class="project-table-head">
-            <span>Image</span>
-            <span>Title</span>
-            <span>Category</span>
-            <span>Status</span>
-            <span>Actions</span>
-          </div>
-          <div class="project-list" id="projectList">
-            <!-- Rows injected by JS -->
-          </div>
-        </div>
-      </section>
+      <main class="main">
 
-      <!-- ── UPLOAD PANEL ── -->
-      <section class="panel" id="panel-upload">
-        <div class="panel-header">
-          <div>
-            <h1 class="panel-title" id="uploadPanelTitle">New Project</h1>
-            <p class="panel-sub">Fill in the details and upload an image</p>
-          </div>
-        </div>
-
-        <form class="upload-form" id="uploadForm">
-          <input type="hidden" id="editId" value="" />
-
-          <!-- Drop zone -->
-          <div class="drop-zone" id="dropZone">
-            <div class="drop-inner" id="dropInner">
-              <span class="drop-icon">↑</span>
-              <p class="drop-label">Drag & drop image here</p>
-              <p class="drop-sub">or click to browse · JPG, PNG, WEBP · max 10MB</p>
-              <input type="file" id="fileInput" accept="image/*" hidden />
+        <!-- PROJECTS PANEL -->
+        <section class="panel active" id="panel-projects">
+          <div class="panel-header">
+            <div>
+              <h1 class="panel-title">Projects</h1>
+              <p class="panel-sub" id="projectCount">Loading…</p>
             </div>
-            <div class="drop-preview" id="dropPreview" style="display:none">
-              <img id="previewImg" src="" alt="Preview" />
-              <button type="button" class="preview-remove" id="removeImg">✕</button>
+            <button class="btn-new" id="btnNewProject">+ New project</button>
+          </div>
+          <div class="project-table-wrap">
+            <div class="project-table-head">
+              <span>Image</span>
+              <span>Title</span>
+              <span>Category</span>
+              <span>Status</span>
+              <span>Actions</span>
+            </div>
+            <div class="project-list" id="projectList"></div>
+          </div>
+        </section>
+
+        <!-- UPLOAD PANEL -->
+        <section class="panel" id="panel-upload">
+          <div class="panel-header">
+            <div>
+              <h1 class="panel-title" id="uploadPanelTitle">New Project</h1>
+              <p class="panel-sub">Fill in the details and upload an image</p>
             </div>
           </div>
+          <form class="upload-form" id="uploadForm">
+            <input type="hidden" id="editId" value="" />
 
-          <!-- Progress bar -->
-          <div class="upload-progress" id="uploadProgress" style="display:none">
-            <div class="progress-bar">
-              <div class="progress-fill" id="progressFill"></div>
+            <div class="drop-zone" id="dropZone">
+              <div class="drop-inner" id="dropInner">
+                <span class="drop-icon">↑</span>
+                <p class="drop-label">Drag & drop image here</p>
+                <p class="drop-sub">or click to browse · JPG, PNG, WEBP · max 10MB</p>
+                <input type="file" id="fileInput" accept="image/*" hidden />
+              </div>
+              <div class="drop-preview" id="dropPreview" style="display:none">
+                <img id="previewImg" src="" alt="Preview" />
+                <button type="button" class="preview-remove" id="removeImg">✕</button>
+              </div>
             </div>
-            <span class="progress-label" id="progressLabel">0%</span>
-          </div>
 
-          <!-- Fields -->
-          <div class="form-grid">
-            <div class="field-group">
-              <label>Project title *</label>
-              <input type="text" id="fieldTitle" placeholder="e.g. Luxe Cosmetics Brand" required />
+            <div class="upload-progress" id="uploadProgress" style="display:none">
+              <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+              <span class="progress-label" id="progressLabel">0%</span>
             </div>
-            <div class="field-group">
-              <label>Category *</label>
-              <select id="fieldCategory" required>
-                <option value="">Select category</option>
-                <option value="branding">Brand Identity</option>
-                <option value="logo">Logo Design</option>
-                <option value="flyer">Flyer Design</option>
-                <option value="social">Social Media Kit</option>
-                <option value="motion">Motion Graphics</option>
-                <option value="print">Print Design</option>
-              </select>
-            </div>
-            <div class="field-group field-group--full">
-              <label>Description</label>
-              <textarea id="fieldDescription" rows="4" placeholder="What was this project about? What did you solve?"></textarea>
-            </div>
-            <div class="field-group">
-              <label>Tags <span class="label-hint">(comma separated)</span></label>
-              <input type="text" id="fieldTags" placeholder="branding, identity, packaging" />
-            </div>
-            <div class="field-group">
-              <label>Status</label>
-              <select id="fieldPublished">
-                <option value="true">Published — visible on site</option>
-                <option value="false">Draft — hidden from site</option>
-              </select>
-            </div>
-          </div>
 
-          <div class="form-actions">
-            <button type="button" class="btn-cancel" id="btnCancel">Cancel</button>
-            <button type="submit" class="btn-save" id="saveBtn">
-              <span id="saveBtnLabel">Save project</span>
-            </button>
-          </div>
+            <div class="form-grid">
+              <div class="field-group">
+                <label>Project title *</label>
+                <input type="text" id="fieldTitle" placeholder="e.g. Luxe Cosmetics Brand" required />
+              </div>
+              <div class="field-group">
+                <label>Category *</label>
+                <select id="fieldCategory" required>
+                  <option value="">Select category</option>
+                  <option value="branding">Brand Identity</option>
+                  <option value="logo">Logo Design</option>
+                  <option value="flyer">Flyer Design</option>
+                  <option value="social">Social Media Kit</option>
+                  <option value="motion">Motion Graphics</option>
+                  <option value="print">Print Design</option>
+                </select>
+              </div>
+              <div class="field-group field-group--full">
+                <label>Description</label>
+                <textarea id="fieldDescription" rows="4" placeholder="What was this project about? What did you solve?"></textarea>
+              </div>
+              <div class="field-group">
+                <label>Tags <span class="label-hint">(comma separated)</span></label>
+                <input type="text" id="fieldTags" placeholder="branding, identity, packaging" />
+              </div>
+              <div class="field-group">
+                <label>Status</label>
+                <select id="fieldPublished">
+                  <option value="true">Published — visible on site</option>
+                  <option value="false">Draft — hidden from site</option>
+                </select>
+              </div>
+            </div>
 
-          <p class="form-error" id="formError"></p>
-        </form>
-      </section>
+            <div class="form-actions">
+              <button type="button" class="btn-cancel" id="btnCancel">Cancel</button>
+              <button type="submit" class="btn-save" id="saveBtn">
+                <span id="saveBtnLabel">Save project</span>
+              </button>
+            </div>
+            <p class="form-error" id="formError"></p>
+          </form>
+        </section>
 
-    </main>
-  </div>
+      </main>
+    </div><!-- /.dashboard-body -->
+  </div><!-- /.dashboard -->
 
-  <!-- Delete confirm modal -->
+  <!-- Delete Modal -->
   <div class="modal-overlay" id="deleteModal" style="display:none">
     <div class="modal">
       <h3 class="modal-title">Delete project?</h3>
-      <p class="modal-body">This will permanently remove the project from your site. This can't be undone.</p>
+      <p class="modal-body">This permanently removes the project from your site. Can't be undone.</p>
       <div class="modal-actions">
         <button class="btn-cancel" id="cancelDelete">Keep it</button>
         <button class="btn-delete-confirm" id="confirmDelete">Yes, delete</button>
@@ -188,7 +189,7 @@
     </div>
   </div>
 
-  <!-- Toast -->
+  <!-- Toast notification -->
   <div class="toast" id="toast"></div>
 
   <script type="module" src="admin.js"></script>

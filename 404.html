@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Page Not Found | FME Creative</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .not-found {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .not-found::before {
+      content: '404';
+      position: absolute;
+      font-family: var(--ff-serif);
+      font-size: clamp(12rem, 30vw, 22rem);
+      font-weight: 600;
+      color: rgba(77, 159, 255, 0.04);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .not-found-tag {
+      font-family: var(--ff-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .not-found-title {
+      font-family: var(--ff-serif);
+      font-weight: 300;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .not-found-title em {
+      color: var(--gold);
+      font-style: italic;
+    }
+    .not-found-sub {
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 400px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+    .not-found-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+
+  <nav class="nav scrolled">
+    <a href="index.html" class="nav-logo">
+      <span class="logo-text">FME</span>
+      <span class="logo-dot">●</span>
+      <span class="logo-sub">CREATIVE</span>
+    </a>
+  </nav>
+
+  <main class="not-found">
+    <span class="not-found-tag">Error 404</span>
+    <h1 class="not-found-title">
+      This page<br />
+      <em>got lost</em> somewhere.
+    </h1>
+    <p class="not-found-sub">
+      The page you're looking for doesn't exist or may have been moved.
+      Let's get you back on track.
+    </p>
+    <div class="not-found-actions">
+      <a href="index.html" class="btn-primary">← Back to home</a>
+      <a href="index.html#work" class="btn-ghost">View work</a>
+    </div>
+  </main>
+</body>
+</html>

@@ -3,43 +3,111 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FME CREATIVE — Creative Designer</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>FME CREATIVE — Visual Designer | Brand Identity & Print</title>
+
+  <!-- ── FAVICON ── -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="alternate icon" href="favicon.ico" />
+
+  <!-- ── SEO ── -->
+  <meta name="description" content="FME Creative — Visual designer specialising in brand identity, logo design, flyers, and motion graphics. Based in Ekiti State, available worldwide." />
+  <meta name="keywords" content="graphic designer Nigeria, brand identity Ekiti, logo design, flyer design, FME Creative" />
+  <meta name="author" content="FME Creative" />
+
+  <!-- ── OPEN GRAPH (WhatsApp, Facebook, LinkedIn previews) ── -->
+  <meta property="og:type"         content="website" />
+  <meta property="og:url"          content="https://fme-creative.web.app/" />
+  <meta property="og:title"        content="FME CREATIVE — Visual Designer" />
+  <meta property="og:description"  content="Crafting visuals that speak before words do. Brand identity, logos, print & motion — available worldwide." />
+  <meta property="og:image"        content="https://fme-creative.web.app/og-image.jpg" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale"       content="en_NG" />
+  <meta property="og:site_name"    content="FME Creative" />
+
+  <!-- ── TWITTER CARD ── -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="FME CREATIVE — Visual Designer" />
+  <meta name="twitter:description" content="Crafting visuals that speak before words do." />
+  <meta name="twitter:image"       content="https://fme-creative.web.app/og-image.jpg" />
+
+  <!-- ── FONTS ── -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Custom Cursor -->
+  <!-- ══ LOADING SCREEN ══ -->
+  <div class="loader" id="loader">
+    <div class="loader-inner">
+      <div class="loader-logo">
+        <span class="loader-text">FME</span>
+        <span class="loader-dot">●</span>
+        <span class="loader-sub">CREATIVE</span>
+      </div>
+      <div class="loader-bar-wrap">
+        <div class="loader-bar" id="loaderBar"></div>
+      </div>
+      <span class="loader-pct" id="loaderPct">0%</span>
+    </div>
+  </div>
+
+  <!-- ══ WHATSAPP FLOAT ══ -->
+  <a href="https://wa.me/2349027753378?text=Hi%20FME%20Creative%2C%20I%27d%20like%20to%20discuss%20a%20project."
+     target="_blank" rel="noopener noreferrer"
+     class="wa-float" id="waFloat" aria-label="Chat on WhatsApp">
+    <svg class="wa-float-icon" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    <span class="wa-float-label">Let's talk</span>
+  </a>
+
+  <!-- ══ LIGHTBOX MODAL ══ -->
+  <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Project detail">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">✕</button>
+    <div class="lightbox-inner">
+      <div class="lightbox-img-wrap">
+        <img class="lightbox-img" id="lightboxImg" src="" alt="" />
+        <div class="lightbox-img-fallback" id="lightboxFallback"></div>
+      </div>
+      <div class="lightbox-body">
+        <span class="lightbox-cat" id="lightboxCat"></span>
+        <h2 class="lightbox-title" id="lightboxTitle"></h2>
+        <p class="lightbox-desc" id="lightboxDesc"></p>
+        <div class="lightbox-tags" id="lightboxTags"></div>
+        <a href="https://wa.me/2349027753378?text=Hi%20FME%20Creative%2C%20I%20love%20your%20work%20and%20want%20to%20discuss%20a%20similar%20project."
+           target="_blank" rel="noopener noreferrer"
+           class="btn-primary lightbox-cta">Book a similar project →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PAGE CONTENT ══ -->
   <div class="cursor" id="cursor"></div>
   <div class="cursor-follower" id="cursorFollower"></div>
-
-  <!-- Noise Overlay -->
   <div class="noise"></div>
 
-  <!-- ===== NAVIGATION ===== -->
   <nav class="nav" id="nav">
     <a href="#" class="nav-logo">
       <span class="logo-text">FME</span>
       <span class="logo-dot">●</span>
       <span class="logo-sub">CREATIVE</span>
     </a>
-
     <ul class="nav-links">
       <li><a href="#work" class="nav-link">Work</a></li>
       <li><a href="#about" class="nav-link">About</a></li>
       <li><a href="#contact" class="nav-link">Contact</a></li>
     </ul>
-
     <a href="#contact" class="nav-cta">Book a project</a>
-
     <button class="nav-hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span>
     </button>
   </nav>
 
-  <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu">
     <ul>
       <li><a href="#work" class="mobile-link">Work</a></li>
@@ -49,47 +117,37 @@
     </ul>
   </div>
 
-  <!-- ===== HERO ===== -->
   <section class="hero" id="hero">
-    <div class="hero-tag reveal-up">
-      <span class="tag-dot"></span>Available for freelance
-    </div>
-
+    <div class="hero-tag reveal-up"><span class="tag-dot"></span>Available for freelance</div>
     <h1 class="hero-title">
-      <span class="line reveal-up" style="--delay: 0.1s">Crafting visuals</span>
-      <span class="line line-italic reveal-up" style="--delay: 0.2s">that speak</span>
-      <span class="line reveal-up" style="--delay: 0.3s">before words do.</span>
+      <span class="line reveal-up" style="--delay:0.1s">Crafting visuals</span>
+      <span class="line line-italic reveal-up" style="--delay:0.2s">that speak</span>
+      <span class="line reveal-up" style="--delay:0.3s">before words do.</span>
     </h1>
-
-    <p class="hero-sub reveal-up" style="--delay: 0.4s">
+    <p class="hero-sub reveal-up" style="--delay:0.4s">
       Brand identity · Print design · Motion graphics<br />
-      Lagos — Available worldwide
+      Ekiti State — Available worldwide
     </p>
-
-    <div class="hero-actions reveal-up" style="--delay: 0.5s">
+    <div class="hero-actions reveal-up" style="--delay:0.5s">
       <a href="#work" class="btn-primary">View work</a>
       <a href="#about" class="btn-ghost">Who I am</a>
     </div>
-
-    <div class="hero-scroll reveal-up" style="--delay: 0.6s">
+    <div class="hero-scroll reveal-up" style="--delay:0.6s">
       <span class="scroll-line"></span>
       <span class="scroll-text">Scroll</span>
     </div>
-
-    <!-- Floating accent images -->
-    <div class="hero-float hero-float--1 reveal-up" style="--delay: 0.3s">
-      <div class="float-img" style="background: linear-gradient(135deg, #c9a96e 0%, #a07840 100%);">
+    <div class="hero-float hero-float--1 reveal-up" style="--delay:0.3s">
+      <div class="float-img" style="background:linear-gradient(135deg,#1a3a6e,#2d6bbf);">
         <span class="float-label">Brand Identity</span>
       </div>
     </div>
-    <div class="hero-float hero-float--2 reveal-up" style="--delay: 0.45s">
-      <div class="float-img" style="background: linear-gradient(135deg, #2a2a2a 0%, #444 100%);">
+    <div class="hero-float hero-float--2 reveal-up" style="--delay:0.45s">
+      <div class="float-img" style="background:linear-gradient(135deg,#0d1425,#1a2f55);">
         <span class="float-label">Print Design</span>
       </div>
     </div>
   </section>
 
-  <!-- ===== MARQUEE ===== -->
   <div class="marquee-wrap">
     <div class="marquee-track">
       <span>Brand Identity</span><span class="sep">✦</span>
@@ -107,14 +165,11 @@
     </div>
   </div>
 
-  <!-- ===== WORK / PORTFOLIO ===== -->
   <section class="work" id="work">
     <div class="section-header reveal-up">
       <span class="section-tag">Selected Work</span>
       <h2 class="section-title">Recent projects</h2>
     </div>
-
-    <!-- Category Filter -->
     <div class="filter-row reveal-up">
       <button class="filter-btn active" data-filter="all">All</button>
       <button class="filter-btn" data-filter="branding">Branding</button>
@@ -122,16 +177,12 @@
       <button class="filter-btn" data-filter="flyer">Flyers</button>
       <button class="filter-btn" data-filter="social">Social</button>
     </div>
-
-    <!-- Portfolio Grid — populated dynamically by main.js via Firestore -->
     <div class="portfolio-grid" id="portfolioGrid"></div>
-
     <div class="work-footer reveal-up">
       <a href="#contact" class="btn-outline">Start a project with me →</a>
     </div>
   </section>
 
-  <!-- ===== ABOUT ===== -->
   <section class="about" id="about">
     <div class="about-grid">
       <div class="about-left reveal-up">
@@ -142,84 +193,58 @@
           it's communication.
         </h2>
         <p class="about-body">
-          I'm a visual designer based in EKITI STATE with a passion for building brands that feel alive. Whether it's a logo that needs to own a room or a campaign that needs to stop the scroll — I bring craft, strategy, and obsession to every pixel.
-                  <p class="about-body">
-                    Over 5 years of EXPERIENCE in visual design, don't just design — I solve.
-                  </p>
-        <a href="#contact" class="btn-primary" style="margin-top: 2rem; display: inline-block;">Work with me</a>
+          I'm a visual designer based in Ekiti State with a passion for building brands that feel alive. Whether it's a logo that needs to own a room or a campaign that needs to stop the scroll — I bring craft, strategy, and obsession to every pixel.
+        </p>
+        <p class="about-body">Over 5 years of experience in visual design. I don't just design — I solve.</p>
+        <a href="#contact" class="btn-primary" style="margin-top:2rem;display:inline-block;">Work with me</a>
       </div>
-
-      <div class="about-right reveal-up" style="--delay: 0.2s">
+      <div class="about-right reveal-up" style="--delay:0.2s">
         <div class="about-img-wrap">
-          <div class="about-img" style="background: linear-gradient(160deg, #1a1a1a 0%, #3a2a1a 100%); display:flex; align-items:center; justify-content:center; color: #c9a96e; font-family: 'Cormorant Garamond', serif; font-size: 5rem; font-style: italic;">FME</div>
+          <div class="about-img" style="background:linear-gradient(160deg,#080d18,#111b30,#1a2f55);display:flex;align-items:center;justify-content:center;color:#4d9fff;font-family:'Cormorant Garamond',serif;font-size:5rem;font-style:italic;">FME</div>
           <div class="about-accent-card">
-            <span class="accent-num">50+</span>
+            <span class="accent-num">500+</span>
             <span class="accent-label">Projects delivered</span>
           </div>
         </div>
-
         <div class="about-stats">
-          <div class="stat">
-            <span class="stat-num">5</span>
-            <span class="stat-label">Years experience</span>
-          </div>
-          <div class="stat">
-            <span class="stat-num">30+</span>
-            <span class="stat-label">Happy clients</span>
-          </div>
-          <div class="stat">
-            <span class="stat-num">12</span>
-            <span class="stat-label">Industries served</span>
-          </div>
+          <div class="stat"><span class="stat-num">5</span><span class="stat-label">Years experience</span></div>
+          <div class="stat"><span class="stat-num">300+</span><span class="stat-label">Satisfied clients</span></div>
+          <div class="stat"><span class="stat-num">100+</span><span class="stat-label">Industries served</span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== TESTIMONIALS ===== -->
   <section class="testimonials" id="testimonials">
     <div class="section-header reveal-up">
       <span class="section-tag">Testimonials</span>
       <h2 class="section-title">What clients say</h2>
     </div>
-
     <div class="testi-grid">
-      <div class="testi-card reveal-up" style="--delay: 0s">
+      <div class="testi-card reveal-up" style="--delay:0s">
         <p class="testi-quote">"FME completely transformed how our brand looks and feels. The logo alone got us more inquiries than our old website ever did."</p>
         <div class="testi-author">
-          <div class="testi-avatar" style="background: linear-gradient(135deg, #c9a96e, #a07840);"></div>
-          <div>
-            <span class="testi-name">Amaka Osei</span>
-            <span class="testi-role">Founder, Luxe Cosmetics</span>
-          </div>
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#1a3a6e,#2d6bbf);"></div>
+          <div><span class="testi-name">Dave</span><span class="testi-role">Founder, Dalki Studio</span></div>
         </div>
       </div>
-
-      <div class="testi-card reveal-up" style="--delay: 0.15s">
+      <div class="testi-card reveal-up" style="--delay:0.15s">
         <p class="testi-quote">"Fast, professional, and genuinely creative. He understood the brief better than I did and delivered something beyond expectations."</p>
         <div class="testi-author">
-          <div class="testi-avatar" style="background: linear-gradient(135deg, #0f3460, #16213e);"></div>
-          <div>
-            <span class="testi-name">Chidi Eze</span>
-            <span class="testi-role">CEO, Ember Studio</span>
-          </div>
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#0d1425,#1a2f55);"></div>
+          <div><span class="testi-name">Alix</span><span class="testi-role">CEO, Alix</span></div>
         </div>
       </div>
-
-      <div class="testi-card reveal-up" style="--delay: 0.3s">
-        <p class="testi-quote">"Our event posters were shared 200+ times on Instagram. People thought we hired a big agency. It was just FME."</p>
+      <div class="testi-card reveal-up" style="--delay:0.3s">
+        <p class="testi-quote">"Our event posters were shared 2000+ times on Instagram. People thought we hired a big agency. It was just FME."</p>
         <div class="testi-author">
-          <div class="testi-avatar" style="background: linear-gradient(135deg, #006644, #003d2b);"></div>
-          <div>
-            <span class="testi-name">Tolu Bankole</span>
-            <span class="testi-role">Event Director, Neon Nights</span>
-          </div>
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#003d6e,#005fa8);"></div>
+          <div><span class="testi-name">Engr Tolu Bankole</span><span class="testi-role">Event Director, Tech hub</span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===== CONTACT ===== -->
   <section class="contact" id="contact">
     <div class="contact-inner reveal-up">
       <span class="section-tag">Contact</span>
@@ -227,7 +252,6 @@
         Got a project in mind?<br />
         <em>Let's build something great.</em>
       </h2>
-
       <form class="contact-form" id="contactForm">
         <div class="form-row">
           <div class="form-group">
@@ -256,22 +280,20 @@
         </div>
         <button type="submit" class="btn-primary btn-submit">Send message →</button>
       </form>
-
       <div class="contact-links">
         <a href="mailto:faitholotin@gmail.com" class="contact-link">Email Us</a>
         <span class="sep-dot">·</span>
-        <a href="https://wa.me/2349027753378" class="contact-link">WhatsApp</a>
+        <a href="https://wa.me/2349027753378" target="_blank" class="contact-link">WhatsApp</a>
         <span class="sep-dot">·</span>
         <a href="https://behance.net" target="_blank" class="contact-link">Behance</a>
       </div>
     </div>
   </section>
 
-  <!-- ===== FOOTER ===== -->
   <footer class="footer">
     <div class="footer-inner">
       <span class="footer-logo">FME <em>CREATIVE</em></span>
-      <span class="footer-copy">© 2025 · Crafted with intention</span>
+      <span class="footer-copy">© 2026 · Crafted with intention</span>
       <div class="footer-links">
         <a href="#work">Work</a>
         <a href="#about">About</a>

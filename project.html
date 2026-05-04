@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project — FME Creative</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="project.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <div class="noise"></div>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursorFollower"></div>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav-logo">
+      <span class="logo-text">FME</span>
+      <span class="logo-dot">●</span>
+      <span class="logo-sub">CREATIVE</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#work" class="nav-link">Work</a></li>
+      <li><a href="index.html#about" class="nav-link">About</a></li>
+      <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+    </ul>
+    <a href="index.html#contact" class="nav-cta">Book a project</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="index.html#work" class="mobile-link">Work</a></li>
+      <li><a href="index.html#about" class="mobile-link">About</a></li>
+      <li><a href="index.html#contact" class="mobile-link">Contact</a></li>
+      <li><a href="index.html#contact" class="mobile-link mobile-cta">Book a project →</a></li>
+    </ul>
+  </div>
+
+  <!-- LOADING -->
+  <div class="proj-loading" id="projLoading">
+    <div class="proj-spinner"></div>
+  </div>
+
+  <!-- ERROR -->
+  <div class="proj-error" id="projError" style="display:none">
+    <h2>Project not found</h2>
+    <p>This project may have been removed or the link is broken.</p>
+    <a href="index.html" class="btn-primary" style="margin-top:1.5rem">← Back to portfolio</a>
+  </div>
+
+  <!-- PROJECT PAGE -->
+  <article class="proj-page" id="projPage" style="display:none">
+
+    <!-- Hero -->
+    <div class="proj-hero">
+      <div class="proj-hero-img" id="projHeroImg"></div>
+      <div class="proj-hero-overlay"></div>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div class="proj-breadcrumb reveal-up">
+      <a href="index.html" class="back-link">← All work</a>
+      <div class="proj-tags" id="projTags"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="proj-content">
+      <div class="proj-header reveal-up">
+        <span class="proj-cat" id="projCat"></span>
+        <h1 class="proj-title" id="projTitle"></h1>
+      </div>
+
+      <div class="proj-body">
+        <div class="proj-desc reveal-up" id="projDesc"></div>
+
+        <aside class="proj-sidebar reveal-up" style="--delay:0.15s">
+          <div class="sidebar-block" id="sidebarTags"></div>
+          <div class="sidebar-block">
+            <span class="sidebar-label">Category</span>
+            <span class="sidebar-val" id="sidebarCat"></span>
+          </div>
+          <a href="index.html#contact" class="btn-primary" style="text-align:center;justify-content:center;">
+            Start a similar project →
+          </a>
+        </aside>
+      </div>
+    </div>
+
+    <!-- Next Project -->
+    <div class="proj-next" id="projNext" style="display:none">
+      <span class="next-label">Next project</span>
+      <a class="next-card" id="nextCard" href="#">
+        <div class="next-img" id="nextImg"></div>
+        <div class="next-info">
+          <h3 class="next-title" id="nextTitle"></h3>
+          <span class="next-cat" id="nextCat"></span>
+        </div>
+        <span class="next-arrow">→</span>
+      </a>
+    </div>
+
+  </article>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="footer-logo">FME <em>CREATIVE</em></span>
+      <span class="footer-copy">© 2025 · Crafted with intention</span>
+      <div class="footer-links">
+        <a href="index.html#work">Work</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="project.js"></script>
+</body>
+</html>
